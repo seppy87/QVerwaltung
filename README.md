@@ -15,10 +15,13 @@ PODOFO              0.9M              LGPL
  
  RIBBON             trunk U           LGPL
  
+ TinyXML            trunk U           MIT
+ 
+ 
  
  Downloads:
  Ribbon - https://github.com/martijnkoopman/Qt-Ribbon-Widget
- 
+ TinyXML++ https://github.com/wxFormBuilder/ticpp
  
  Podofo - Source inside this Project
  To compile my version of Podofo you just need to download the Source from podofo.sourceforge.net and replace the .h and .cpp with mine. and recompile it. And add Poco C++ Library to it.
