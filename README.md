@@ -6,9 +6,13 @@ Dependencies
 M means modified
 U means Unmodified ( i made no changes)
 Library     |     Version     |     License
+
 Qt                  5.12U             LGPL
+
 PODOFO              0.9M              LGPL
+
  |_ POCO C++        trunk U           BOOST
+ 
  RIBBON             trunk U           LGPL
  
  
