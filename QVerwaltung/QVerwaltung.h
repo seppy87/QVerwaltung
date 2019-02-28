@@ -2,6 +2,7 @@
 
 #ifdef _DEBUG
 #pragma comment(lib,"podofo\\dynamic\\debug\\podofo.lib")
+#pragma comment(lib, "tinyxml\\debug\\ticppd.lib")
 #else
 #pragma comment(lib,"podofo\\dynamic\\release\\podofo.lib")
 #endif
@@ -24,10 +25,14 @@ const QString DRIVER("QSQLITE");
 //My Classes
 #include"QV_Objekt.h"
 #include"QV_Update.h"
+#include"QV_Settings.h"
+#include"QV_Mietvertrag.h"
 
 
 class QV_Users;
 class QV_Objekt;
+class QV_Settings;
+class QV_Mietvertrag;
 class QVerwaltung : public QMainWindow
 {
 	Q_OBJECT
@@ -42,7 +47,8 @@ private:
 	bool isRoot = false;
 	QV_Users *dlg_user;
 	QV_Objekt* frm_object;
-	
+	QV_Settings* frm_settings;
+	QV_Mietvertrag* frm_mietvertrag;
 
 protected:
 	void settings();
@@ -62,6 +68,7 @@ protected:
 
 	void onTblOverViewCellClick();
 	void onUpdateClick();
+	void onContractClick();
 
 	void resizeEvent(QResizeEvent* event) override;
 
@@ -75,6 +82,8 @@ protected:
 	void init_mieter();
 	void cbIndexChanged();
 	void clearOverview();
+
+	void onSettingsClick();
 
 	friend class QV_Objekt;
 };

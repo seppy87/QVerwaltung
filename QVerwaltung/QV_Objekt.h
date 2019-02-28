@@ -49,6 +49,9 @@ protected:
 	void updateObject();
 	void insertVector(const QVector<QVector<QString>>& set, QString table, QString objectid);
 
+	//static Functions
+	static QVector<QVector<QString>> getNewEntries(QTableWidget* tbl);
+
 	//SETUP FORMS
 	void setup_gui();
 };

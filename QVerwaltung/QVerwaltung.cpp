@@ -8,6 +8,9 @@
 #include<boost/algorithm/string/case_conv.hpp>
 #include<tuple>
 #include<qcombobox.h>
+#include<Windows.h>
+#include<Poco/Path.h>
+#include<Poco/File.h>
 
 
 
@@ -15,6 +18,7 @@ QVerwaltung::QVerwaltung(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
+	
 	this->ribbon = new Ribbon(this);
 	this->ribbon->setGeometry(this->ui.tabWidget->geometry());
 	this->ui.tabWidget->setVisible(false);
@@ -28,7 +32,7 @@ QVerwaltung::QVerwaltung(QWidget *parent)
 	btnSettings->setText("Einstellungen");
 	btnSettings->setIcon(QIcon(":/icons/icons/settings.jpg"));
 	ribbon->addButton("Datei", "Allgemein", btnSettings);
-	connect(btnSettings, &QToolButton::clicked, this, &QVerwaltung::settings);
+	connect(btnSettings, &QToolButton::clicked, this, &QVerwaltung::onSettingsClick);
 	QToolButton *btnUsers = new QToolButton();
 	btnUsers->setText("Benutzer");
 	btnUsers->setIcon(QIcon(":/icons/icons/users.png"));
@@ -97,6 +101,12 @@ QVerwaltung::QVerwaltung(QWidget *parent)
 	connect(btn_contactTennant, &QToolButton::clicked, this, &QVerwaltung::contactTennant);
 	this->ribbon->addButton("Mieter", "Kommunikation", btn_contactTennant);
 
+	QToolButton* btn_contract = new QToolButton();
+	btn_contract->setText("Mietvertrag");
+	btn_contract->setIcon(QIcon(":/QVerwaltung/icons/contract.png"));
+	connect(btn_contract, &QToolButton::clicked, this, &QVerwaltung::onContractClick);
+	this->ribbon->addButton(lat("Verträge"), "Mietvertrag", btn_contract);
+
 	//Programm Details
 	QToolButton* btn_update = new QToolButton();
 	btn_update->setText("Update");
@@ -126,10 +136,22 @@ void QVerwaltung::addObject()
 
 void QVerwaltung::editObject()
 {
+	if (ui.cb_choose->currentText() != "Objekte") return;
+	this->onTblOverViewCellClick();
 }
 
 void QVerwaltung::delObject()
 {
+	if (ui.cb_choose->currentText() != "Objekte") return;
+	auto rid = this->ui.tbl_overview->currentRow();
+	if (rid < 0)return;
+	auto res = QMessageBox::question(nullptr, "Sind Sie Sicher?", "Wollen Sie das Objekt wirklich löschen?", QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No);
+	if (res == QMessageBox::StandardButton::No) return;
+	auto id = this->ui.tbl_overview->item(rid, 0)->text();
+	QSqlQuery q(db);
+	q.prepare("DELETE FROM tbl_object WHERE id=?");
+	q.addBindValue(id);
+	q.exec();
 }
 
 void QVerwaltung::addEquipment()
@@ -142,6 +164,7 @@ void QVerwaltung::editEquipment()
 
 void QVerwaltung::delEquipment()
 {
+
 }
 
 void QVerwaltung::addTennant()
@@ -154,6 +177,16 @@ void QVerwaltung::editTennant()
 
 void QVerwaltung::delTennant()
 {
+	if (ui.cb_choose->currentText() != "Mieter") return;
+	auto rid = this->ui.tbl_overview->currentRow();
+	if (rid < 0)return;
+	auto res = QMessageBox::question(nullptr, "Sind Sie Sicher?", "Wollen Sie das Mieter wirklich löschen?", QMessageBox::StandardButton::Yes, QMessageBox::StandardButton::No);
+	if (res == QMessageBox::StandardButton::No) return;
+	auto id = this->ui.tbl_overview->item(rid, 0)->text();
+	QSqlQuery q(db);
+	q.prepare("DELETE FROM tbl_object WHERE id=?");
+	q.addBindValue(id);
+	q.exec();
 }
 
 void QVerwaltung::contactTennant()
@@ -172,6 +205,12 @@ void QVerwaltung::onUpdateClick()
 	(QV_Update()).exec();
 }
 
+void QVerwaltung::onContractClick()
+{
+	frm_mietvertrag = new QV_Mietvertrag();
+	frm_mietvertrag->show();
+}
+
 void QVerwaltung::resizeEvent(QResizeEvent* event) {
 	QMainWindow::resizeEvent(event);
 	auto rect = this->ribbon->geometry();
@@ -182,9 +221,11 @@ void QVerwaltung::resizeEvent(QResizeEvent* event) {
 
 void QVerwaltung::init_sqlite() {
 	//QSqlDriver* driver = new QSqlDriver()
-	auto path = QStandardPaths::locate(QStandardPaths::AppDataLocation,"db.sqlite");
+	auto path = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
 	this->db = QSqlDatabase::addDatabase(DRIVER);
-	db.setDatabaseName(path);
+	LPSTR lpBuffer = new char[255];
+	ExpandEnvironmentStringsA("%APPDATA%", lpBuffer, 255);
+	db.setDatabaseName(QString::fromLatin1(lpBuffer)+"\\QVerwaltung\\db.sqlite");
 	auto r = db.open();
 	if (!r) {
 		QMessageBox::critical(nullptr, "ERROR", "Could not open Database", QMessageBox::StandardButton::Ok);
@@ -211,7 +252,9 @@ void QVerwaltung::login(QString & name, QString & password, int & index)
 	//auto x = QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256);
 	//QMessageBox::information(nullptr, "Info", hash_hex.c_str(), QMessageBox::StandardButton::Ok);
 	QSqlQuery query(db);
-	query.exec("SELECT * FROM tbl_user WHERE name='"+name+"'");
+	query.prepare("SELECT * FROM tbl_user WHERE name=?");
+	query.addBindValue(name);
+	query.exec();
 	//std::tuple<QString, QString, QString> users;
 	QString pw;
 	while (query.next()) {
@@ -288,5 +331,11 @@ void QVerwaltung::clearOverview()
 	this->ui.tbl_overview->clear();
 	this->ui.tbl_overview->setRowCount(0);
 	this->ui.tbl_overview->setColumnCount(0);
+}
+
+void QVerwaltung::onSettingsClick()
+{
+	this->frm_settings = new QV_Settings();
+	this->frm_settings->show();
 }
 

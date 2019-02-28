@@ -1,18 +1,21 @@
 <RCC>
-    <qresource prefix="/QVerwaltung"/>
-    <qresource prefix="/icons">
-        <file>icons/addcustomer.png</file>
-        <file>icons/addobject.png</file>
-        <file>icons/delete.png</file>
-        <file>icons/deluser.png</file>
-        <file>icons/edituser.ico</file>
-        <file>icons/equipment.png</file>
-        <file>icons/exit_ico.png</file>
-        <file>icons/images.png</file>
-        <file>icons/mail.png</file>
-        <file>icons/settings.jpg</file>
-        <file>icons/users.png</file>
-        <file>Resources/edituser.png</file>
-        <file>icons/update.png</file>
-    </qresource>
+  <qresource prefix="/QVerwaltung">
+    <file>icons/add.png</file>
+    <file>icons/contract.png</file>
+  </qresource>
+  <qresource prefix="/icons">
+    <file>icons/addcustomer.png</file>
+    <file>icons/addobject.png</file>
+    <file>icons/delete.png</file>
+    <file>icons/deluser.png</file>
+    <file>icons/edituser.ico</file>
+    <file>icons/equipment.png</file>
+    <file>icons/exit_ico.png</file>
+    <file>icons/images.png</file>
+    <file>icons/mail.png</file>
+    <file>icons/settings.jpg</file>
+    <file>icons/users.png</file>
+    <file>Resources/edituser.png</file>
+    <file>icons/update.png</file>
+  </qresource>
 </RCC>

@@ -66,6 +66,12 @@
     <ClCompile Include="QV_Update.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QV_Settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QV_Mietvertrag.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="QVerwaltung.h">
@@ -92,6 +98,12 @@
     <QtMoc Include="QV_Update.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="QV_Settings.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="QV_Mietvertrag.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="QVerwaltung.ui">
@@ -110,6 +122,12 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="QV_Update.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="QV_Settings.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="QV_Mietvertrag.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

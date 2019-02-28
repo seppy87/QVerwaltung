@@ -344,6 +344,30 @@ void QV_Objekt::createNewObject()
 
 void QV_Objekt::updateObject()
 {
+	QString oid = ui.tb_object_id->text();
+	QSqlQuery q(parent->db);
+	q.prepare("UPDATE tbl_object SET "
+		"name=?, "
+		"strasse=?, "
+		"plz=?, "
+		"stadt=?, "
+		"etage=?, "
+		"baujahr=?, "
+		"groesse=?, "
+		"zimmer=? WHERE id=?"
+	);
+	q.addBindValue(ui.tb_object_name->text());
+	q.addBindValue(ui.tb_object_street->text());
+	q.addBindValue(ui.tb_object_zip->text());
+	q.addBindValue(ui.tb_object_city->text());
+	q.addBindValue(ui.tb_object_etage->text());
+	q.addBindValue(ui.tb_object_year->text());
+	q.addBindValue(ui.tb_object_size->text());
+	q.addBindValue(ui.tb_object_zimmer->text());
+	q.exec();
+	this->insertVector(QV_Objekt::getNewEntries(ui.tbl_equipment),"tbl_ausstattung",oid);
+	this->insertVector(QV_Objekt::getNewEntries(ui.tbl_tennant),"tbl_mieter",oid);
+	
 }
 
 void QV_Objekt::insertVector(const QVector<QVector<QString>>& set, QString table, QString objectid)
@@ -353,9 +377,50 @@ void QV_Objekt::insertVector(const QVector<QVector<QString>>& set, QString table
 	{
 		q.prepare("INSERT INTO tbl_ausstattung(object_id , erstellungsdatum, fussboden , sicherung , sicherungswert , bad_dusche , waschmaschine , balkon , Kabelanschluss , ftth , heizungsart , weiteres )"
 			"VALUES( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )");
-		
+		q.addBindValue(objectid);
+		q.addBindValue(QDateTime::currentDateTime().toString());
+		q.addBindValue(ui.tb_e_fussboden->text());
+		q.addBindValue(ui.cb_sicherung->currentText());
+		q.addBindValue(ui.tb_e_fusevalue->text());
+		q.addBindValue(ui.tb_e_bad->text());
+		q.addBindValue(ui.tb_e_waschmaschine->text());
+		q.addBindValue(ui.tb_e_balkon->text());
+		q.addBindValue(ui.tb_e_kabelanschluss->text());
+		q.addBindValue(ui.tb_ftth->text());
+		q.addBindValue(ui.tb_heizung->text());
+		q.addBindValue(ui.tb_weiteres->toPlainText());
+		q.exec();
+		return;
+	}
+	if (table == "tbl_mieter") {
+		q.prepare("INSERT INTO tbl_mieter( objectid , address_id , vorname , nachname , geburtstag , einzugs_datum , auszugs_datum )"
+			"VALUES( ? , ? , ? , ? , ? , ? , ? )");
+		q.addBindValue(objectid);
+		q.addBindValue("0");
+		q.addBindValue(ui.tb_t_vorname->text());
+		q.addBindValue(ui.tb_t_nachname->text());
+		q.addBindValue(ui.tb_t_geburtstag->text());
+		q.addBindValue(ui.tb_t_einzug->text());
+		q.addBindValue(ui.tb_t_auszug->text());
+		q.exec();
+		return;
 	}
 	
+}
+
+QVector<QVector<QString>> QV_Objekt::getNewEntries(QTableWidget * tbl)
+{
+	
+	QVector<QVector<QString>> result;
+	for (uint r = 0; r < tbl->rowCount(); r++) {
+		if (tbl->item(r, 0)->text() == "-1") continue;
+		QVector<QString> set;
+		for (uint c = 0; c < tbl->columnCount(); c++) {
+			set.insert(set.end(), tbl->item(r, c)->text());
+		}
+		result.insert(result.end(), set);
+	}
+	return result;
 }
 
 void QV_Objekt::setup_gui() {
