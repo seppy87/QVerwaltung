@@ -27,12 +27,14 @@ const QString DRIVER("QSQLITE");
 #include"QV_Update.h"
 #include"QV_Settings.h"
 #include"QV_Mietvertrag.h"
+#include"QV_Mieter.h"
 
 
 class QV_Users;
 class QV_Objekt;
 class QV_Settings;
 class QV_Mietvertrag;
+class QV_Mieter;
 class QVerwaltung : public QMainWindow
 {
 	Q_OBJECT
@@ -49,6 +51,7 @@ private:
 	QV_Objekt* frm_object;
 	QV_Settings* frm_settings;
 	QV_Mietvertrag* frm_mietvertrag;
+	QV_Mieter* frm_mieter;
 
 protected:
 	void settings();
@@ -85,5 +88,9 @@ protected:
 
 	void onSettingsClick();
 
+	void onTennantAddClick();
+
 	friend class QV_Objekt;
+	friend class QV_Mietvertrag;
+	friend class QV_Mieter;
 };

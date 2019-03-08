@@ -23,4 +23,5 @@ private:
 protected:
 	void createSettings();
 	void onSeiteSpeichernClick();
+	void setupForm();
 };

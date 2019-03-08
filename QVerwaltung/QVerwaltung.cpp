@@ -80,7 +80,7 @@ QVerwaltung::QVerwaltung(QWidget *parent)
 	QToolButton* btn_addTennant = new QToolButton();
 	btn_addTennant->setText(lat("Mieter hinzufügen"));
 	btn_addTennant->setIcon(QIcon(":/icons/icons/addcustomer.png"));
-	connect(btn_addTennant, &QToolButton::clicked, this, &QVerwaltung::addTennant);
+	connect(btn_addTennant, &QToolButton::clicked, this, &QVerwaltung::onTennantAddClick);
 	this->ribbon->addButton("Mieter", "Mieter Modifizieren", btn_addTennant);
 	//Mieter Editieren
 	QToolButton* btn_editTennant = new QToolButton();
@@ -173,6 +173,11 @@ void QVerwaltung::addTennant()
 
 void QVerwaltung::editTennant()
 {
+	if (ui.cb_choose->currentText() != "Mieter") return;
+	auto id = ui.tbl_overview->currentRow();
+	auto pid = ui.tbl_overview->item(id, 0)->text();
+	frm_mieter = new QV_Mieter(this);
+	frm_mieter->showWindow(pid);
 }
 
 void QVerwaltung::delTennant()
@@ -207,7 +212,7 @@ void QVerwaltung::onUpdateClick()
 
 void QVerwaltung::onContractClick()
 {
-	frm_mietvertrag = new QV_Mietvertrag();
+	frm_mietvertrag = new QV_Mietvertrag(this);
 	frm_mietvertrag->show();
 }
 
@@ -337,5 +342,11 @@ void QVerwaltung::onSettingsClick()
 {
 	this->frm_settings = new QV_Settings();
 	this->frm_settings->show();
+}
+
+void QVerwaltung::onTennantAddClick()
+{
+	frm_mieter = new QV_Mieter(this);
+	frm_mieter->show();
 }
 
